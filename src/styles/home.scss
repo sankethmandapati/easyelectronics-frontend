@@ -1,0 +1,27 @@
+.home {
+    height: 100vh;
+    background-color: #ffefc9;
+    &__navigation {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-image: url('../assets/channel_banner.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 155px;
+        background-position-y: top;
+        nav {
+            position: absolute;
+            bottom: 1em;
+            a, button {
+                margin-left: 2em;
+                text-decoration: none;
+                color: white;
+                background-color: blue;
+                padding: 0.5em;
+                border: none;
+            }
+        }
+    }
+}
