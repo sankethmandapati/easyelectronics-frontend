@@ -11,17 +11,25 @@ export default class UploadContainer extends Component {
     async onSubmit(e) {
         try {
             e.preventDefault();
-            console.log("eeeeeee: ", e.target);
             const {
                 video,
                 thumbnail,
                 title,
                 description
             } = e.target;
-            console.log("video: ", video);
             const videoUploadRespose = await this.uploadFiles(video.files[0]);
-            console.log("thumbnail: ", thumbnail);
             const thumbnailUploadRespose = await this.uploadFiles(thumbnail.files[0]);
+            console.log("videoUploadRespose: ", videoUploadRespose);
+            console.log("thumbnailUploadRespose: ", thumbnailUploadRespose);
+            const reqPayload = {
+                video: videoUploadRespose.fileName,
+                thumbnail: thumbnailUploadRespose.fileName,
+                title: title.value,
+                description: description.value
+            };
+            console.log("reqPayload: ", reqPayload);
+            const videoCreateResponse = await api.call('createVideo', reqPayload);
+            console.log("videoCreateResponse: ", videoCreateResponse);
         } catch(err) {
             console.log("Error in creating video...: ", err);
         }
@@ -34,7 +42,7 @@ export default class UploadContainer extends Component {
                 'content-type': 'multipart/form-data'
             });
             console.log("upoadResponse: ", upoadResponse);
-            return upoadResponse;
+            return upoadResponse.response;
         } catch(err) {
             console.log("Error in uploading file...: ", err);
         }

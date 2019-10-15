@@ -28,7 +28,7 @@ class Api {
                 method: 'POST'
             },
             getAllVideos: {
-                endPoint: '/api/v1/video/getAll',
+                endPoint: '/api/v1/video',
                 method: 'GET'
             }
         };
