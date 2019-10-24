@@ -19,8 +19,12 @@ class Api {
                 endPoint: '/api/v1/auth',
                 method: 'GET',
             },
-            uploadFile: {
-                endPoint: '/api/v1/video/upload',
+            uploadVideo: {
+                endPoint: '/api/v1/video/uploadVideo',
+                method: 'POST'
+            },
+            uploadThumbnail: {
+                endPoint: '/api/v1/video/uploadThumbnail',
                 method: 'POST'
             },
             createVideo: {
@@ -30,27 +34,71 @@ class Api {
             getAllVideos: {
                 endPoint: '/api/v1/video',
                 method: 'GET'
+            },
+            streamVideo: {
+                endPoint: '/api/v1/video/streamVideo/:id',
+                method: 'GET'
+            },
+            getCategories: {
+                endPoint: '/api/v1/categories',
+                method: 'GET'
+            },
+            getCategoryById: {
+                endPoint: '/api/v1/categories/:id',
+                method: 'GET'
+            },
+            createCategory: {
+                endPoint: '/api/v1/categories',
+                method: 'POST'
+            },
+            updateCategory: {
+                endPoint: '/api/v1/categories/:id',
+                method: 'PUT'
+            },
+            removeCategory: {
+                endPoint: '/api/v1/categories/:id',
+                method: 'DELETE'
+            },
+            createSubscriptionPlan: {
+                endPoint: '/api/v1/subscriptionPlans',
+                method: 'POST'
             }
         };
     }
-    async call(endPoint, reqBody, headers = {}) {
+    async call(endPoint, payload, options) {
         try {
-            console.log("Endpoint: ", endPoint);
+            const {reqBody, params, query} = payload || {};
             const e = this.endPoints[endPoint];
-            const url = this.baseUrl + e.endPoint;
-            headers['content-type'] = headers['content-type'] || 'application/json';
-            headers.accesstoken = this.accessToken || null;
-            console.log("reqBody: ", reqBody);
-            console.log("headers: ", headers);
+            let url = this.baseUrl + e.endPoint;
+            if(params) {
+                Object.entries(params).forEach(([k, v]) => {
+                    url = url.replace(`:${k}`, v);
+                });
+            }
+            if(query) {
+                url = Object.entries(params).reduce((finalUrl, [k, v], n) => {
+                    if(n === 0)
+                        return `${finalUrl}?${k}=${v}`;
+                    return `${finalUrl}&${k}=${v}`;
+                }, url);
+            }
+            if(!options) {
+                options = {
+                    headers: {
+                        'content-type': 'application/json',
+                        'accesstoken': this.accessToken
+                    }
+                };
+            }
+            options.headers = options.headers || {};
+            options.headers.accesstoken = this.accessToken || null;
             const functionParams = [url];
             if(reqBody) {
                 functionParams.push(reqBody);
             };
-            functionParams.push({headers});
+            functionParams.push(options);
             const responseData = await axios[e.method.toLowerCase()].apply(null, functionParams);
-            console.log("responseData: ", responseData);
             const response = responseData.data;
-            console.log("response: ", response);
             return {
                 success: true,
                 response
@@ -65,7 +113,8 @@ class Api {
     }
     async login(email, password) {
         try {
-            const {success, response} = await this.call('login', {email, password});
+            const reqBody = {email, password};
+            const {success, response} = await this.call('login', {reqBody});
             if(success) {
                 cookies.set('accessToken', response.accessToken, {path: '/'});
                 this.accessToken = response.accessToken;

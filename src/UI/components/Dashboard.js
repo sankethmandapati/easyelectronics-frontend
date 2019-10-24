@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import api from '../../utils/api';
+import { Link } from "react-router-dom";
 
 export default (props) => {
     const [viedos, setVideos] = useState([]);
@@ -15,14 +16,14 @@ export default (props) => {
         <div>
             {
                 viedos.map((video) => (
-                    <div>
+                    <Link to={`/watchVideo/${video._id}`}>
                         <img src={`http://localhost:4000/${video.thumbnail}`} height="100px" width="100px" alt="thumbnail" />
                         <p>
                             {
                                 video.title
                             }
                         </p>
-                    </div>
+                    </Link>
                 ))
             }
         </div>

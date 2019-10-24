@@ -10,7 +10,8 @@ export const register = (e) => async (dispatch) => {
         const phoneNum = e.target.phoneNum.value;
         const password = e.target.password.value;
         const name = e.target.name.value;
-        const {response, success, errorMessage} = await api.call('register', {email, password, name, phoneNum});
+        const reqBody = {email, password, name, phoneNum};
+        const {response, success, errorMessage} = await api.call('register', {reqBody});
         alert("Registered successfully!\nA verification email has been send to your registered mail address, please check");
         if(success) {
             return dispatch({
