@@ -22,10 +22,10 @@ export const create = (plan) => async (dispatch) => {
                 messageType: 'error'
             });
         } catch(err) {
-        return dispatch({
-            type: 'DISPLAY_ALERT',
-            message: 'Unexpected error occured while fetching information, please try again',
-            messageType: 'error'
-        });
+            return dispatch({
+                type: 'DISPLAY_ALERT',
+                message: 'Unexpected error occured while fetching information, please try again',
+                messageType: 'error'
+            });
     }
 }

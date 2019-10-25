@@ -62,6 +62,10 @@ class Api {
             createSubscriptionPlan: {
                 endPoint: '/api/v1/subscriptionPlans',
                 method: 'POST'
+            },
+            createTransaction: {
+                endPoint: '/api/v1/transaction',
+                method: 'POST'
             }
         };
     }

@@ -5,13 +5,15 @@ import auth from './reducers/auth';
 import categories from './reducers/categories';
 import popovers from './reducers/popovers';
 import subscriptionPlans from './reducers/subscriptionPlans';
+import transactions from './reducers/transactions';
 
 export default () => {
     const reducer = combineReducers({
         auth,
         categories,
         popovers,
-        subscriptionPlans
+        subscriptionPlans,
+        transactions
     });
     const middlewares = [thunk];
     middlewares.push(createLogger);
@@ -41,6 +43,11 @@ export default () => {
         subscriptionPlans: {
             plans: [],
             plan: {}
+        },
+        transactions: {
+            transactions: [],
+            transaction: {},
+            categories: []
         }
     };
     const store = createStore(reducer, initialState, applyMiddleware(...middlewares));
