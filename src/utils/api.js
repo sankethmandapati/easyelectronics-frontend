@@ -59,6 +59,10 @@ class Api {
                 endPoint: '/api/v1/categories/:id',
                 method: 'DELETE'
             },
+            getSubscriptionPlans:  {
+                endPoint: '/api/v1/subscriptionPlans',
+                method: 'GET'
+            },
             createSubscriptionPlan: {
                 endPoint: '/api/v1/subscriptionPlans',
                 method: 'POST'
@@ -66,6 +70,26 @@ class Api {
             createTransaction: {
                 endPoint: '/api/v1/transaction',
                 method: 'POST'
+            },
+            createSubscription: {
+                endPoint: '/api/v1/subscriptions',
+                method: 'POST'
+            },
+            getPendingRequests: {
+                endPoint: '/api/v1/subscriptions/getPendingRequests',
+                method: 'GET'
+            },
+            getAllSubscriptions: {
+                endPoint: '/api/v1/subscriptions',
+                method: 'GET'
+            },
+            approveSubscriptions: {
+                endPoint: '/api/v1/subscriptions/approve/:id',
+                method: 'PUT'
+            },
+            rejectSubscriptions: {
+                endPoint: '/api/v1/subscriptions/reject/:id',
+                method: 'PUT'
             }
         };
     }

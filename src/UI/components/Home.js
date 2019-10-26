@@ -6,7 +6,8 @@ import WatchVideo from './WatchVideo';
 import AddCateory from '../containers/AddCategory';
 import Categories from '../containers/Categories';
 import SubscriptionPlans from '../containers/SubscriptionPlans';
-import Transaction from '../containers/Transaction';
+import CreateSubscription from '../containers/CreateSubscription';
+import Subscriptions from '../containers/Subscriptions';
 import '../../styles/home.scss';
 const Anything = () => <h1>Anything.</h1>;
 
@@ -22,7 +23,8 @@ export default (props) => {
                     <div className="home__navigation">
                         <nav>
                             <Link to="/">Home</Link>
-                            <Link to="/transaction">Transaction</Link>
+                            <Link to="/createSubscription">Subscription Request</Link>
+                            <Link to="/subscriptions">Subscriptions</Link>
                             {
                                 props.userDetails.role === 'admin' ? (
                                     <>
@@ -41,7 +43,8 @@ export default (props) => {
                         <Route exact path="/addCategory" component={ AddCateory } />
                         <Route exact path="/categories" component={ Categories } />
                         <Route exact path="/subscriptionPlans" component={ SubscriptionPlans } />
-                        <Route exact path="/transaction" component={ Transaction } />
+                        <Route exact path="/createSubscription" component={ CreateSubscription } />
+                        <Route exact path="/subscriptions" component={ Subscriptions } />
                         <Route exact path="/editCategory/:id" component={ AddCateory } />
                         <Route exact path="/*" component={ Anything } />
                     </Switch>

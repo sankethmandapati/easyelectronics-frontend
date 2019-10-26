@@ -5,22 +5,25 @@ import React, {
 export default ({ 
     create, 
     getAll, 
-    categories = [],
-    selectCategory,
-    selectedCategories
+    subscriptionPlans = []
 }) => {
     useEffect(() => {
-        if(!categories || (categories.length < 1))
+        if(subscriptionPlans.length < 1)
             getAll();
     }, []);
     return (
         <div>
             <form onSubmit={ (e) => {
                 e.preventDefault();
-                create(e.target, selectedCategories);
+                const reqBody = {
+                    transactionId: e.target.transactionId.value,
+                    transactionMode: e.target.transactionMode.value,
+                    subscriptionPlan: e.target.subscriptionPlan.value
+                };
+                console.log("reqBody: ", reqBody);
+                create(reqBody);
             } }>
                 <input type="text" name="transactionId" />
-                <input type="date" name="transactionDate" />
                 <select name="transactionMode">
                     <option value="" >Select a transaction mode</option>
                     <option value="NEFT" >NEFT</option>
@@ -29,12 +32,12 @@ export default ({
                     <option value="PAYTM" >PAYTM</option>
                 </select>
                 { 
-                    categories.map(c => (
+                    subscriptionPlans.map(c => (
                         <>
                             <input 
-                                type="checkbox" 
-                                checked={selectedCategories.includes(c._id)} 
-                                onChange={() => selectCategory(c._id)} /> { c.name }
+                                type="radio"
+                                name="subscriptionPlan" 
+                                value={ c._id } /> { c.name }
                             <br />
                         </>
                     ))
