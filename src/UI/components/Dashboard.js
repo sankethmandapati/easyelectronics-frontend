@@ -1,31 +1,51 @@
-import React, {useState, useEffect} from 'react';
-import api from '../../utils/api';
+import React, { useEffect } from 'react';
+import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
+import '../../styles/dashboard.scss';
 
-export default (props) => {
-    const [viedos, setVideos] = useState([]);
+export default ({
+    getAllVideos,
+    videos = []
+}) => {
+    console.log("videos: ", videos);
     useEffect(() => {
-        api.call('getAllVideos').then((response) => {
-            if(response.success)
-                setVideos(response.response);
-        }).catch((err) => {
-            console.log("Error: ", err);
-        })
+        if(videos.length === 0) {
+            getAllVideos();
+        }
     }, []);
     return (
-        <div>
+        <div className="dashboard">
+            <section className="dashboard__videoContainer row">
             {
-                viedos.map((video) => (
-                    <Link to={`/watchVideo/${video._id}`}>
-                        <img src={`http://localhost:4000/${video.thumbnail}`} height="100px" width="100px" alt="thumbnail" />
-                        <p>
-                            {
-                                video.title
-                            }
-                        </p>
-                    </Link>
+                videos.map((video) => (
+                        <Link key={video._id} className="col-md-3 col-sm-6 dashboard__videoContainer--video"  to={`/watchVideo/${video._id}`}>
+                            <img src={`http://localhost:4000/${video.thumbnail}`} height="100px" width="100px" alt="thumbnail" />
+                            <h2>
+                                {
+                                    video.title
+                                }
+                            </h2>
+                            {/* <p>
+                                {
+                                    video.uploadedBy.name
+                                }
+                            </p> */}
+                            <p>
+                                {
+                                    video.category.name
+                                } | {
+                                    moment(video.uploadedOn).fromNow()
+                                }
+                            </p>
+                            <div className="dashboard__videoContainer--playButton">
+                                <FontAwesomeIcon icon={ faPlay } color="#FFF" size="lg" />
+                            </div>
+                        </Link>
                 ))
             }
+            </section>
         </div>
     );
 }

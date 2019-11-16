@@ -1,0 +1,25 @@
+table {
+    border: 1px solid #99bedd;
+    min-width: 80%;
+    max-width: 90%;
+    margin-top: 2em;
+    margin-left: 1em;
+    thead {
+        background-color: #347AB6;
+        color: #FFF;
+    }
+    tbody {
+        tr {
+            &:nth-child(even) {
+                background: #F1F1F1
+            }
+            a {
+                color: #347AB6;
+                text-decoration: none;
+            }
+        }
+    }
+    th, td {
+        padding: 0.5em;
+    }
+}

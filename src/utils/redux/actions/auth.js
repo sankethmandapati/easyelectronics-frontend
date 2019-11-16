@@ -4,7 +4,8 @@ export const register = (e) => async (dispatch) => {
     try {
         e.preventDefault();
         dispatch({
-            type: "LOGIN_REGISTER_REQUEST"
+            type: 'DISPLAY_LOADER',
+            message: 'Creating new category'
         });
         const email = e.target.email.value;
         const phoneNum = e.target.phoneNum.value;

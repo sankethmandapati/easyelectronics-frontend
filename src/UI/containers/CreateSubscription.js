@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import CreateSubscription from '../components/CreateSubscription';
 import { create } from '../../utils/redux/actions/subscription';
-import { getAll } from '../../utils/redux/actions/subscriptionPlans';
+import { getAll, getById } from '../../utils/redux/actions/subscriptionPlans';
 
 const mapStateToProps = (state) => ({
     subscriptionPlans: state.subscriptionPlans.plans
@@ -9,5 +9,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
     create,
-    getAll
+    getAll,
+    getById
 })(CreateSubscription);

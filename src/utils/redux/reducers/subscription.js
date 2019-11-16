@@ -1,3 +1,16 @@
+const updateSubscription = (
+    subscriptions = [], 
+    id, 
+    patch = {}
+) => subscriptions.map(s => {
+    if(s._id === id)
+        return {
+            ...s,
+            ...patch
+        };
+    return { ...s };
+});
+
 export default (state = {}, action) => {
     switch(action.type) {
         case 'SET_ALL_SUBSCRIPTIONS':
@@ -22,6 +35,15 @@ export default (state = {}, action) => {
                     {...action.response}
                 ]
             };
+        case 'UPDATE_SUBSCRIPTION':
+            return {
+                ...state,
+                subscriptions: updateSubscription(
+                    state.subscriptions,
+                    action.id,
+                    action.response
+                )
+            }
         case 'SET_SUBSCRIPTION':
             return {
                 ...state,

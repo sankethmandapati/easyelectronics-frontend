@@ -14,16 +14,15 @@ class SubscriptionPlansContainer extends Component {
         if(!this.props.categories || this.props.categories.length === 0)
             this.props.getAll();
     }
-    onSubmit(e, categories) {
+    onSubmit(target, description, categories) {
         const {
             name,
-            description,
             amount,
             validityInDays
-        } = e.target;
+        } = target;
         this.props.create({
             name: name.value,
-            description: description.value,
+            description: description,
             amount: amount.value,
             validityInDays: validityInDays.value,
             categories: categories

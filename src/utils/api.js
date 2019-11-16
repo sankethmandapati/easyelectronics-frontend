@@ -35,6 +35,10 @@ class Api {
                 endPoint: '/api/v1/video',
                 method: 'GET'
             },
+            getVideoById: {
+                endPoint: '/api/v1/video/:id',
+                method: 'GET'
+            },
             streamVideo: {
                 endPoint: '/api/v1/video/streamVideo/:id',
                 method: 'GET'
@@ -61,6 +65,10 @@ class Api {
             },
             getSubscriptionPlans:  {
                 endPoint: '/api/v1/subscriptionPlans',
+                method: 'GET'
+            },
+            getSubscriptionPlanById: {
+                endPoint: '/api/v1/subscriptionPlans/:id',
                 method: 'GET'
             },
             createSubscriptionPlan: {
@@ -90,6 +98,10 @@ class Api {
             rejectSubscriptions: {
                 endPoint: '/api/v1/subscriptions/reject/:id',
                 method: 'PUT'
+            },
+            createPaymentOption: {
+                endPoint: '/api/v1/accountDetails',
+                method: 'POST'
             }
         };
     }
@@ -127,15 +139,14 @@ class Api {
             functionParams.push(options);
             const responseData = await axios[e.method.toLowerCase()].apply(null, functionParams);
             const response = responseData.data;
-            return {
-                success: true,
-                response
-            };
+            return response;
         } catch(err) {
             console.log("Error in api call: ", err);
+            if(err.response && err.response.data)
+                return err.response.data;
             return {
                 success: false,
-                errorMessage: err.message
+                errorMessage: "Unexpected error occured while gathering required data, please try again"
             };
         }
     }

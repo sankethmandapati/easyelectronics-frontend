@@ -33,7 +33,7 @@ export default (state, action) => {
         case 'SELECT_PLAN':
             return {
                 ...state,
-                plan: action.plan
+                plan: action.response
             };
         default:
             return { ...state };

@@ -28,14 +28,13 @@ class UploadContainer extends Component {
         }
     }
 
-    async onSubmit(e) {
+    async onSubmit(e, description) {
         try {
             e.preventDefault();
             const {
                 video,
                 thumbnail,
                 title,
-                description,
                 category
             } = e.target;
             const videoUploadRespose = await this.uploadFiles('uploadVideo', 'video', video.files[0]);
@@ -44,7 +43,7 @@ class UploadContainer extends Component {
                 video: videoUploadRespose.fileName,
                 thumbnail: thumbnailUploadRespose.fileName,
                 title: title.value,
-                description: description.value,
+                description,
                 category: category.value
             };
             await api.call('createVideo', {reqBody: reqPayload});

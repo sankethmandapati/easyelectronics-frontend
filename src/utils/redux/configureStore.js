@@ -3,7 +3,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
 import auth from './reducers/auth';
 import categories from './reducers/categories';
-import popovers from './reducers/popovers';
+import popovers, { defaultPopoverState } from './reducers/popovers';
+import video from './reducers/video';
 import subscriptionPlans from './reducers/subscriptionPlans';
 import subscription from './reducers/subscription';
 
@@ -13,7 +14,8 @@ export default () => {
         categories,
         popovers,
         subscriptionPlans,
-        subscription
+        subscription,
+        video
     });
     const middlewares = [thunk];
     middlewares.push(createLogger);
@@ -28,17 +30,7 @@ export default () => {
             category: {}
         },
         popovers: {
-            showLoader: false,
-            showAlert: false,
-            showPrompt: false,
-            showCustomPopover: false,
-            component: null,
-            alertMessage: {
-                messageType: '',
-                message: '',
-                buttons: []
-            },
-            message: ''
+            ...defaultPopoverState
         },
         subscriptionPlans: {
             plans: [],
@@ -47,6 +39,10 @@ export default () => {
         subscription: {
             subscriptions: [],
             subscription: {}
+        },
+        video: {
+            videoDetails: {},
+            videos: []
         }
     };
     const store = createStore(reducer, initialState, applyMiddleware(...middlewares));

@@ -1,61 +1,78 @@
 import api from '../../api';
+import { openLoader, openModal, setShowModal } from './popovers';
 
 export const create = (plan) => async (dispatch) => {
-        try {
+    try {
+        dispatch(openLoader('Creating new category...'));
+        const {
+            response, 
+            success, 
+            errorMessage
+        } = await api.call('createSubscriptionPlan', {reqBody: plan});
+        dispatch(setShowModal(false));
+        if(success) {
             dispatch({
-                type: 'DISPLAY_LOADER',
-                message: 'Creating new category'
+                type: 'ADD_PLAN',
+                response
             });
-            const {
-                response, 
-                success, 
-                errorMessage
-            } = await api.call('createSubscriptionPlan', {reqBody: plan});
-           if(success) 
-                return dispatch({
-                    type: 'ADD_PLAN',
-                    response
-                });
-            return dispatch({
-                type: 'DISPLAY_ALERT',
-                message: errorMessage,
-                messageType: 'error'
-            });
-        } catch(err) {
-            return dispatch({
-                type: 'DISPLAY_ALERT',
-                message: 'Unexpected error occured while fetching information, please try again',
-                messageType: 'error'
-            });
+            return dispatch(openModal('small', 'Subscription plan created'));
+        }
+        return dispatch(openModal('small', errorMessage, 'error'));
+    } catch(err) {
+        return dispatch(openModal(
+            'small',
+            'Unexpected error occured while fetching information, please try again',
+            'error'
+        ));
     }
 }
 
 export const getAll = () => async (dispatch) => {
     try {
-        dispatch({
-            type: 'DISPLAY_LOADER',
-            message: 'Creating new category'
-        });
+        dispatch(openLoader('Gathering required information...'));
         const {
             response, 
             success, 
             errorMessage
         } = await api.call('getSubscriptionPlans');
+        dispatch(setShowModal(false));
        if(success) 
             return dispatch({
                 type: 'GET_ALL',
                 response
             });
-        return dispatch({
-            type: 'DISPLAY_ALERT',
-            message: errorMessage,
-            messageType: 'error'
-        });
+        return dispatch(openModal('small',errorMessage,'error'));
     } catch(err) {
-        return dispatch({
-            type: 'DISPLAY_ALERT',
-            message: 'Unexpected error occured while fetching information, please try again',
-            messageType: 'error'
-        });
+        return dispatch(openModal(
+            'small',
+            'Unexpected error occured while fetching information, please try again',
+            'error'
+        ));
+    }
 }
+
+export const getById = (id) => async (dispatch) => {
+    try {
+        dispatch(openLoader('Fetching subscription details...'));
+        const {
+            success,
+            response,
+            errorMessage
+        } = await api.call('getSubscriptionPlanById', {params: { id }});
+        if(success) {
+            dispatch({
+                type: 'SELECT_PLAN',
+                response
+            });
+            return dispatch(setShowModal(false));
+        }
+        return dispatch(openModal('small', errorMessage, 'error'));
+    } catch(err) {
+        console.log("Error: ", err);
+        return dispatch(openModal(
+            'small',
+            'Unexpected error occured while gathering required information, please try again',
+            'error'
+        ));
+    }
 }

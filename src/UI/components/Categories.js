@@ -1,53 +1,50 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Table, { Col } from './DataTable';
 
-export default (props) => {
+const headers = [
+    'Category',
+    'Description',
+    'Complementary'
+];
+
+const TableBody = (col) => (
+    <>
+        <Col>
+            <Link to={`/editCategory/${col._id}`}>
+                {
+                    col.name
+                }
+            </Link>
+        </Col>
+        <Col>
+            {
+                col.description
+            }
+        </Col>
+        <Col>
+            {
+                col.complementary ? 'Yes' : 'No'
+            }
+        </Col>
+    </>
+);
+
+export default ({
+    getAll = () => {},
+    categories
+}) => {
     useEffect(() => {
-        props.getAll();
+        getAll();
     }, []);
     return (
         <div>
-            <Link to="/addCategory">Add Category</Link>
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            Name
-                        </th>
-                        <th>
-                            Premium
-                        </th>
-                        <th>
-                            Validity
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        props.categories.map(c => (
-                            <tr>
-                                <td>
-                                    <Link to={`/editCategory/${c._id}`}>
-                                        {
-                                            c.name
-                                        }
-                                    </Link>
-                                </td>
-                                <td>
-                                    {
-                                        c.premiumAmount
-                                    }
-                                </td>
-                                <td>
-                                    {
-                                        c.validityInDays
-                                    }
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+            <Link className="add-category-button" to="/addCategory">+ Add Category</Link>
+            <Table 
+                data={ categories } 
+                headers={ headers }
+                renderColumns={ TableBody }
+            />
         </div>
     );
 }
