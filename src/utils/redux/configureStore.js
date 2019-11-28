@@ -7,6 +7,7 @@ import popovers, { defaultPopoverState } from './reducers/popovers';
 import video from './reducers/video';
 import subscriptionPlans from './reducers/subscriptionPlans';
 import subscription from './reducers/subscription';
+import paymentOptions from './reducers/paymentOptions';
 
 export default () => {
     const reducer = combineReducers({
@@ -15,14 +16,15 @@ export default () => {
         popovers,
         subscriptionPlans,
         subscription,
-        video
+        video,
+        paymentOptions
     });
     const middlewares = [thunk];
     middlewares.push(createLogger);
     const initialState = {
         auth: {
             isAuthenticated: false,
-            authenticationDone: false,
+            userVerificationDone: false,
             userDetails: {}
         },
         categories: {
@@ -43,7 +45,8 @@ export default () => {
         video: {
             videoDetails: {},
             videos: []
-        }
+        },
+        paymentOptions: []
     };
     const store = createStore(reducer, initialState, applyMiddleware(...middlewares));
     return store;

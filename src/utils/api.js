@@ -2,144 +2,54 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import config from './config';
 const cookies = new Cookies();
+
 class Api {
     constructor() {
-        this.baseUrl = config.baseUrl;
         this.accessToken = cookies.get('accessToken') || null;
-        this.endPoints = {
-            register: {
-                endPoint: '/api/v1/auth/register',
-                method: 'POST',
-            },
-            login: {
-                endPoint: '/api/v1/auth/login',
-                method: 'POST',
-            },
-            authenticate: {
-                endPoint: '/api/v1/auth',
-                method: 'GET',
-            },
-            uploadVideo: {
-                endPoint: '/api/v1/video/uploadVideo',
-                method: 'POST'
-            },
-            uploadThumbnail: {
-                endPoint: '/api/v1/video/uploadThumbnail',
-                method: 'POST'
-            },
-            createVideo: {
-                endPoint: '/api/v1/video/create',
-                method: 'POST'
-            },
-            getAllVideos: {
-                endPoint: '/api/v1/video',
-                method: 'GET'
-            },
-            getVideoById: {
-                endPoint: '/api/v1/video/:id',
-                method: 'GET'
-            },
-            streamVideo: {
-                endPoint: '/api/v1/video/streamVideo/:id',
-                method: 'GET'
-            },
-            getCategories: {
-                endPoint: '/api/v1/categories',
-                method: 'GET'
-            },
-            getCategoryById: {
-                endPoint: '/api/v1/categories/:id',
-                method: 'GET'
-            },
-            createCategory: {
-                endPoint: '/api/v1/categories',
-                method: 'POST'
-            },
-            updateCategory: {
-                endPoint: '/api/v1/categories/:id',
-                method: 'PUT'
-            },
-            removeCategory: {
-                endPoint: '/api/v1/categories/:id',
-                method: 'DELETE'
-            },
-            getSubscriptionPlans:  {
-                endPoint: '/api/v1/subscriptionPlans',
-                method: 'GET'
-            },
-            getSubscriptionPlanById: {
-                endPoint: '/api/v1/subscriptionPlans/:id',
-                method: 'GET'
-            },
-            createSubscriptionPlan: {
-                endPoint: '/api/v1/subscriptionPlans',
-                method: 'POST'
-            },
-            createTransaction: {
-                endPoint: '/api/v1/transaction',
-                method: 'POST'
-            },
-            createSubscription: {
-                endPoint: '/api/v1/subscriptions',
-                method: 'POST'
-            },
-            getPendingRequests: {
-                endPoint: '/api/v1/subscriptions/getPendingRequests',
-                method: 'GET'
-            },
-            getAllSubscriptions: {
-                endPoint: '/api/v1/subscriptions',
-                method: 'GET'
-            },
-            approveSubscriptions: {
-                endPoint: '/api/v1/subscriptions/approve/:id',
-                method: 'PUT'
-            },
-            rejectSubscriptions: {
-                endPoint: '/api/v1/subscriptions/reject/:id',
-                method: 'PUT'
-            },
-            createPaymentOption: {
-                endPoint: '/api/v1/accountDetails',
-                method: 'POST'
+        this.axios = {};
+        this.setupAxios();
+    };
+    setupAxios() {
+        this.axios = axios.create({
+            baseURL: config.baseUrl
+        });
+        this.axios.interceptors.request.use(req => {
+            req.headers.accesstoken = this.accessToken || null;
+            if(!req.headers['content-type']) {
+                req.headers['content-type'] = 'application/json';
             }
-        };
+            return req;
+        });
     }
-    async call(endPoint, payload, options) {
+    encodeParams(url, params) {
+        if(params) {
+            Object.entries(params).forEach(([k, v]) => {
+                url = url.replace(`:${k}`, v);
+            });
+        }
+        return url;
+    }
+    encodeQuery(query) {
+        if(query) {
+            return Object.entries(query).reduce((queryString, [k, v], n) => {
+                return `${ queryString }${(n === 0) ? '?' : '&'}${k}=${v}`;
+            }, '');
+        }
+        return '';
+    }
+    async call(endPoint, payload, options = {}) {
         try {
-            const {reqBody, params, query} = payload || {};
-            const e = this.endPoints[endPoint];
-            let url = this.baseUrl + e.endPoint;
-            if(params) {
-                Object.entries(params).forEach(([k, v]) => {
-                    url = url.replace(`:${k}`, v);
-                });
-            }
-            if(query) {
-                url = Object.entries(params).reduce((finalUrl, [k, v], n) => {
-                    if(n === 0)
-                        return `${finalUrl}?${k}=${v}`;
-                    return `${finalUrl}&${k}=${v}`;
-                }, url);
-            }
-            if(!options) {
-                options = {
-                    headers: {
-                        'content-type': 'application/json',
-                        'accesstoken': this.accessToken
-                    }
-                };
-            }
-            options.headers = options.headers || {};
-            options.headers.accesstoken = this.accessToken || null;
+            const { reqBody, params, query } = payload || {};
+            const e = config.endPoints[endPoint];
+            console.log("e: ", e);
+            let url = this.encodeParams(e.endPoint, params) + this.encodeQuery(query);
             const functionParams = [url];
             if(reqBody) {
                 functionParams.push(reqBody);
             };
             functionParams.push(options);
-            const responseData = await axios[e.method.toLowerCase()].apply(null, functionParams);
-            const response = responseData.data;
-            return response;
+            const { data } = await this.axios[e.method.toLowerCase()].apply(null, functionParams);
+            return data;
         } catch(err) {
             console.log("Error in api call: ", err);
             if(err.response && err.response.data)
@@ -152,13 +62,13 @@ class Api {
     }
     async login(email, password) {
         try {
-            const reqBody = {email, password};
-            const {success, response} = await this.call('login', {reqBody});
+            const reqBody = { email, password };
+            const { success, response } = await this.call('login', { reqBody });
             if(success) {
-                cookies.set('accessToken', response.accessToken, {path: '/'});
+                cookies.set('accessToken', response.accessToken, { path: '/' });
                 this.accessToken = response.accessToken;
             }
-            return {success, response};
+            return { success, response };
         } catch(err) {
             console.log("Error in logging in: ", err);
             return {
@@ -170,10 +80,11 @@ class Api {
     async authenticate() {
         try {
             const response = await this.call('authenticate');
+            console.log("RESPOOONSE: ", response);
             return response;
         } catch(err) {
             console.log("Error in authenticating user: ", err);
-            this.logout()
+            this.logout();
             return {
                 success: false,
                 errorMessage: 'Please login again'
@@ -182,7 +93,7 @@ class Api {
     }
     
 	logout() {
-        cookies.remove('accessToken', {path: '/'});
+        cookies.remove('accessToken', { path: '/' });
         this.accessToken = null;
         return true;
 	}

@@ -1,5 +1,5 @@
 import api from '../../api';
-import { openLoader, openModal } from './popovers';
+import { openLoader, openModal, setShowModal } from './popovers';
 
 export const create = (reqBody) => async (dispatch) => {
     try {
@@ -18,6 +18,32 @@ export const create = (reqBody) => async (dispatch) => {
         return dispatch(openModal(
             'small', 
             'Unexpected error occured while creating a payment option, please try again', 
+            'error'
+        ));
+    }
+}
+
+export const getAll = () => async (dispatch) => {
+    try {
+        dispatch(openLoader('Gathering required data...'));
+        const {success, response, errorMessage} = await api.call('getAllPaymentOptions');
+        if(success) {
+            dispatch({
+                type: 'GET_ALL_PAYMENT_OPTIONS',
+                response
+            });
+            return dispatch(setShowModal(false));
+        }
+        return dispatch(openModal(
+            'small',
+            errorMessage,
+            'error'
+        ));
+    } catch(err) {
+        console.log("Error: ", err);
+        return dispatch(openModal(
+            'small',
+            'Error occured while getting pyment options information',
             'error'
         ));
     }

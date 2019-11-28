@@ -2,85 +2,87 @@ import React, {
     useEffect
 } from 'react';
 import parse from 'html-react-parser';
-import '../../styles/createSubscription.scss'
+import SubscriptionDetailsModal from './SubscriptionDetailsModal';
+import '../../styles/createSubscription.scss';
+import Popover from './Popovers';
+import { defaultPopoverState } from '../../utils/redux/reducers/popovers';
 
 export default ({ 
     create, 
     getAll, 
     subscriptionPlans = [],
-    getById
+    getById,
+    showModal,
+    plan,
+    openCustomPopover,
+    setShowSubscriptionModal,
+    getAllPaymentOptions,
+    paymentOptions
 }) => {
     useEffect(() => {
-        if(subscriptionPlans.length < 1)
+        if(subscriptionPlans.length < 1) {
             getAll();
+            getAllPaymentOptions();
+        }
     }, []);
+    // useEffect(() => {
+    //     if(showModal) {
+    //         openCustomPopover({
+    //             customComponent: SubscriptionDetailsModal
+    //         });
+    //     }
+    // }, [showModal]);
     return (
         <div>
-            {/* <form onSubmit={ (e) => {
-                e.preventDefault();
-                const reqBody = {
-                    transactionId: e.target.transactionId.value,
-                    transactionMode: e.target.transactionMode.value,
-                    subscriptionPlan: e.target.subscriptionPlan.value
-                };
-                console.log("reqBody: ", reqBody);
-                create(reqBody);
-            } }> */}
-                {/* <input type="text" name="transactionId" placeholder="Transaction Id" />
-                <select name="transactionMode">
-                    <option value="" >Select a transaction mode</option>
-                    <option value="NEFT" >NEFT</option>
-                    <option value="IMPS" >IMPS</option>
-                    <option value="UPI" >UPI</option>
-                    <option value="PAYTM" >PAYTM</option>
-                </select> */}
-                <div className="row">
-                    { 
-                        subscriptionPlans.map(plan => (
-                            <div key={plan._id} className="col-lg-4 col-md-6 col-sm-12">
-                                <section className="card">
-                                    <div className="card__header">
-                                        <h2>
-                                            {
-                                                plan.name
-                                            }
-                                        </h2>
-                                        <ul>
-                                            {
-                                                plan.categories.map(category => (
-                                                    <li key={category._id}>
-                                                        {
-                                                            category.name
-                                                        }
-                                                    </li>
-                                                ))
-                                            }
-                                        </ul>
-                                    </div>
-                                    <div className="card__bodyx">
+            <div className="row">
+                { 
+                    subscriptionPlans.map(p => (
+                        <div key={p._id} className="col-lg-4 col-md-6 col-sm-12">
+                            <section className="card">
+                                <div className="card__header">
+                                    <h2>
                                         {
-                                            plan.description ? parse(plan.description) : null
+                                            p.name
                                         }
-                                    </div>
-                                    <button onClick={ () => getById(plan._id) }>
-                                        >
-                                    </button>
-                                </section>
-                            </div>
-                        ))
-                    }
-                </div>
-                    {/* // <>
-                    //     <input 
-                    //         type="radio"
-                    //         name="subscriptionPlan" 
-                    //         value={ c._id } /> { c.name }
-                    //     <br />
-                    // </> */}
-                {/* <button type="submit">
-                    Submit
-                </button>
-            </form> */}
+                                    </h2>
+                                    <ul>
+                                        {
+                                            p.categories.map(category => (
+                                                <li key={category._id}>
+                                                    {
+                                                        category.name
+                                                    }
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </div>
+                                <div className="card__bodyx">
+                                    {
+                                        p.description ? parse(p.description) : null
+                                    }
+                                </div>
+                                <button onClick={ () => getById(p._id) }>
+                                    >
+                                </button>
+                            </section>
+                        </div>
+                    ))
+                }
+            </div>
+            <Popover 
+                { ...defaultPopoverState } 
+                headerTitle={plan.name}
+                size='large'
+                setShowModal={ setShowSubscriptionModal }
+                customComponent={
+                    <SubscriptionDetailsModal
+                        plan={ plan }
+                        paymentOptions={ paymentOptions }
+                    />
+                }
+                showModal={ showModal }
+            />
         </div>
     );
 }

@@ -62,7 +62,8 @@ export const getById = (id) => async (dispatch) => {
         if(success) {
             dispatch({
                 type: 'SELECT_PLAN',
-                response
+                response,
+                showModal: true
             });
             return dispatch(setShowModal(false));
         }
@@ -76,3 +77,8 @@ export const getById = (id) => async (dispatch) => {
         ));
     }
 }
+
+export const setShowSubscriptionModal = (showModal) => ({
+    type: 'UPDATE_SUBSCRIPTION_MODAL_VISIBILITY',
+    showModal
+});

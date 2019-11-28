@@ -4,7 +4,7 @@ import {authenticate} from '../../utils/redux/actions/auth';
 
 const mapStateToProps = ({auth}) => ({
     isAuthenticated: auth.isAuthenticated,
-    authenticationDone: auth.authenticationDone,
+    userVerificationDone: auth.userVerificationDone,
     userDetails: auth.userDetails
 });
 

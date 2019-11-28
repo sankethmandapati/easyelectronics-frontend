@@ -10,12 +10,13 @@ export default ({
     progress,
     ...rest
 }) => {
+    console.log("REST: ", rest);
     return (
         <div className={`easyPopover ${showModal ? 'showModal' : ''}`}>
             {
                 (popOverType === 'spinner') ? (
                     <Spinner message={ rest.message } />
-                ) : (popOverType === 'spinner') ? (
+                ) : (popOverType === 'progressBar') ? (
                     <ProgressBar progress={progress} messaage={rest.messaage} />
                 ) : (
                     <Modal {...rest} />

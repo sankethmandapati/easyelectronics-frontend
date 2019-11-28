@@ -18,7 +18,7 @@ export default (props) => {
     }, []);
     return (
     <div>
-        {props.authenticationDone ? (
+        {props.userVerificationDone ? (
             props.isAuthenticated ? (
                 <div className="home">
                     <div className="home__navigation">

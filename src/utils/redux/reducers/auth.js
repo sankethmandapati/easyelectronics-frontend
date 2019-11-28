@@ -13,7 +13,7 @@ export default (state = {}, action) => {
                 isLoading: false,
                 isAuthenticated: true,
                 userDetails: action.response,
-                authenticationDone: true
+                userVerificationDone: true
             };
         case "REGISTER_SUCCESS":
             return {
@@ -27,13 +27,13 @@ export default (state = {}, action) => {
                 isLoading: false,
                 isAuthenticated: false,
                 errorMessage: action.errorMessage,
-                authenticationDone: true
+                userVerificationDone: true
             };
         case "LOGOUT":
             return {
                 ...state,
                 isAuthenticated: false,
-                authenticationDone: false,
+                userVerificationDone: false,
                 userDetails: {}
             };
         default:

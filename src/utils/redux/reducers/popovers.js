@@ -42,7 +42,7 @@ export default (state = {}, action) => {
                 headerTitle: action.headerTitle,
                 footerOptions: action.footerOptions,
                 customComponent: action.customComponent,
-                size: action.size,
+                size: action.size || 'large',
                 type: action.alertType,
                 onModalClose: action.onModalClose,
                 showModal: true,

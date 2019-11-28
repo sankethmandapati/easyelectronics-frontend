@@ -15,27 +15,30 @@ const returnLabelByTransactionType = (transactionType, accountDetail) => {
 }
 
 export default ({
-    description,
-    premimAmount,
-    transactionTypes
+    plan,
+    // description,
+    // premimAmount = 0,
+    // transactionTypes,
+    paymentOptions = []
 }) => {
     const [transactionType, setTransactionType] = useState('');
     const [selectedAccountId, setSelectedAccountId] = useState('');
+    console.log("paymentOptions: ", paymentOptions);
     return (
         <div>
             <div className="row">
                 <div className="col-md-12 col-sm-12 col-lg-12">
                     <section>
                         {
-                            description ? parse(description) : null
+                            plan.description ? parse(plan.description) : null
                         }
                     </section>
                     <section>
                         <span>
                             Payment amount: <strong>
                                 {
-                                    premimAmount
-                                }
+                                    plan.amount || 0
+                                } /-
                             </strong>
                         </span>
                     </section>
@@ -62,27 +65,28 @@ export default ({
                             <>
                                 <div>
                                     {
-                                        accountDetails.map(a => (
-                                            <>
-                                                <input type="radio" value={ a._id } /> {
-                                                    returnLabelByTransactionType()
-                                                }
-                                                {
-                                                    // (transactionType === 'NETBANKING') && selectedAccountId ? (
-                                                        
-                                                    // ) : null
-                                                }
-                                            </>
-                                        ))
+                                        paymentOptions.reduce((details, a) => {
+                                            if(a.modeOfTransaction === transactionType) {
+                                                return [
+                                                    ...details,
+                                                    <div key={ a._id }>
+                                                        <input type="radio" value={ a._id } /> {
+                                                            returnLabelByTransactionType(transactionType, a)
+                                                        }
+                                                    </div>
+                                                ];
+                                            }
+                                            return [...details];
+                                        }, [])
                                     }
                                 </div>
-                                <input type="text" accountDetails name="transactionId" placeholder="Transaction Id" />
+                                <input type="text" name="transactionId" placeholder="Transaction Id" />
                             </>
                         ) : null
                     }
                 </div>
             </div>  {
-                accountDetails.map(a)
+                paymentOptions.map(a => null)
             }
         </div>
     );

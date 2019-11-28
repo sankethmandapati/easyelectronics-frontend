@@ -8,8 +8,8 @@ export default ({
         e.preventDefault();
         create({
             modeOfTransaction,
+            accountHoldersName: e.target.accountHoldersName.value,
             ...(modeOfTransaction === 'NETBANKING' ? {
-                accountHoldersName: e.target.accountHoldersName.value,
                 accountNumber: e.target.accountNumber.value,
                 bankName: e.target.bankName.value,
                 ifscCode: e.target.ifscCode.value
@@ -41,9 +41,17 @@ export default ({
                     </option>
                 </select>
                 {
+                    modeOfTransaction ? (
+                        <input 
+                            type="text" 
+                            name="accountHoldersName" 
+                            placeholder="Account Holder's Name" 
+                        />
+                    ) : null
+                }
+                {
                     (modeOfTransaction === 'NETBANKING') ? (
                         <>
-                            <input type="text" name="accountHoldersName" placeholder="Account Holder's Name" />
                             <input type="text" name="accountNumber" placeholder="Account number" />
                             <input type="text" name="bankName" placeholder="Bank Name" />
                             <input type="text" name="ifscCode" placeholder="IFSC Code" />

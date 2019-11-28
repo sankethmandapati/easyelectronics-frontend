@@ -33,8 +33,14 @@ export default (state, action) => {
         case 'SELECT_PLAN':
             return {
                 ...state,
-                plan: action.response
+                plan: action.response,
+                showModal: action.showModal || false
             };
+        case 'UPDATE_SUBSCRIPTION_MODAL_VISIBILITY':
+            return {
+                ...state,
+                showModal: action.showModal
+            }
         default:
             return { ...state };
     }
