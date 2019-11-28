@@ -14,14 +14,11 @@ const ProtectedRoute = ({component: Component, ...rest}) => (
     )} />
 );
 
-const AuthenticationRoutes = ({component: Component, ...rest}) => {
-    console.log("api.accessToken: ", api.accessToken);
-    
-    return (
+const AuthenticationRoutes = ({component: Component, ...rest}) => (
     <Route {...rest} render={(props) => (
         api.accessToken ? <Redirect to="/"  /> : <Component {...props} />
     )} />
-);}
+);
 
 export default ({ store }) => (
     <Provider store={ store }>

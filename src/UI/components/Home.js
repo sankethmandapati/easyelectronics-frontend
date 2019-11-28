@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import {Redirect, Switch, Route, Link} from 'react-router-dom';
+import api from '../../utils/api';
 import Dashboard from '../containers/Dashboard';
 import Upoad from '../containers/Upload';
 import StreamVideo from '../containers/StreamVideo';
@@ -13,12 +14,23 @@ import '../../styles/home.scss';
 const Anything = () => <h1>Anything.</h1>;
 
 export default (props) => {
+    const [logoutUSer, setLogoutUSer] = useState(false);
     useEffect(() => {
         props.authenticate();
     }, []);
+    useEffect(() => {
+        if(props.userVerificationDone && !props.isAuthenticated) {
+            api.logout();
+            setLogoutUSer(true);
+        }
+    }, [
+        props.userVerificationDone, 
+        props.isAuthenticated
+    ]);
+    
     return (
     <div>
-        {props.userVerificationDone ? (
+        {
             props.isAuthenticated ? (
                 <div className="home">
                     <div className="home__navigation">
@@ -56,7 +68,10 @@ export default (props) => {
                         </section>
                     </div>
                 </div>
-            ) : <Redirect to="/login" />
-        ) : <p>Loagding...</p>}
+            ) : <p>Loagding...</p>
+        }
+        {
+            logoutUSer ? <Redirect to="/login" /> : null
+        }
     </div>
 );}
