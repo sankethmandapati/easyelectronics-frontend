@@ -33,7 +33,6 @@ export default (state = {}, action) => {
             return {
                 ...state,
                 isAuthenticated: false,
-                userVerificationDone: false,
                 userDetails: {}
             };
         default:

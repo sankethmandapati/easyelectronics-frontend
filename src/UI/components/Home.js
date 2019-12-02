@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {Redirect, Switch, Route, Link} from 'react-router-dom';
-import api from '../../utils/api';
+// import api from '../../utils/api';
 import Dashboard from '../containers/Dashboard';
 import Upoad from '../containers/Upload';
 import StreamVideo from '../containers/StreamVideo';
@@ -13,25 +13,31 @@ import AddPAymentOptions from '../containers/AddPaymentOptions';
 import '../../styles/home.scss';
 const Anything = () => <h1>Anything.</h1>;
 
-export default (props) => {
+export default ({
+    authenticate,
+    logout,
+    userVerificationDone,
+    isAuthenticated,
+    userDetails
+}) => {
     const [logoutUSer, setLogoutUSer] = useState(false);
     useEffect(() => {
-        props.authenticate();
+        authenticate();
     }, []);
     useEffect(() => {
-        if(props.userVerificationDone && !props.isAuthenticated) {
-            api.logout();
+        if(userVerificationDone && !isAuthenticated) {
+            logout();
             setLogoutUSer(true);
         }
     }, [
-        props.userVerificationDone, 
-        props.isAuthenticated
+        userVerificationDone,
+        isAuthenticated
     ]);
     
     return (
     <div>
         {
-            props.isAuthenticated ? (
+            isAuthenticated ? (
                 <div className="home">
                     <div className="home__navigation">
                         <nav>
@@ -39,7 +45,7 @@ export default (props) => {
                             <Link to="/createSubscription">Subscribe</Link>
                             <Link to="/subscriptions">My Subscriptions</Link>
                             {
-                                props.userDetails.role === 'admin' ? (
+                                userDetails.role === 'admin' ? (
                                     <>
                                         <Link to="/upload">Upload Video</Link>
                                         <Link to="/categories">Categories</Link>
@@ -48,6 +54,9 @@ export default (props) => {
                                     </>
                                 ) : null
                             }
+                            <button onClick={ logout }>
+                                Logout
+                            </button>
                         </nav>
                     </div>
                     <div className="home__main row">
