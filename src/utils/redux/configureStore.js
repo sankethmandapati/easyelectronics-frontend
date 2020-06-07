@@ -46,10 +46,7 @@ export default () => {
             videoDetails: {},
             videos: []
         },
-        paymentOptions: {
-            keys: [],
-            data: {}
-        }
+        paymentOptions: []
     };
     const store = createStore(reducer, initialState, applyMiddleware(...middlewares));
     return store;

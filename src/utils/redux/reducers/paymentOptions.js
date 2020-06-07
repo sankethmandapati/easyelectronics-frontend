@@ -1,5 +1,4 @@
 export default (state = [], action) => {
-    console.log("action: ", action);
     switch(action.type) {
         case 'GET_ALL_PAYMENT_OPTIONS':
             return [
